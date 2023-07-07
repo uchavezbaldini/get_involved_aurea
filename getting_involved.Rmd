@@ -2,10 +2,10 @@
 title: "Get Involved- AUREA"
 author: "UnYoung"
 date: '2021-08-27'
-output: word
+output: word_document
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include=FALSE, warning=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
 library(readxl)
@@ -21,7 +21,7 @@ In order to increase volunteer participation and involvement with AUREA, the Vol
 
 ## Summary
 
-```{r prep, echo=FALSE}
+```{r prep, echo=FALSE, warning=FALSE}
 library(summarytools)
 library(tidyverse)
 library(stringr)
@@ -40,7 +40,7 @@ mydata_cleaned <- mydata_cleaned %>%
 
 # What are potential barriers to getting involved?
 
-```{r barriers, echo=FALSE}
+```{r barriers, echo=FALSE, warning=FALSE}
 #Clean strings
 mydata_cleaned <- mydata_cleaned %>% mutate(barriers=str_replace_all(barriers, "[()]", ""))
 
@@ -86,12 +86,14 @@ apply((barriers_analyze[-1]), 2, table)
 ```
 
 Most common barriers are:
+
 - Concerns about suitability (e.g., perceived lack of skills)
 - Time constraints
 - Not knowing where/how to get involved
 - Feeling nervous, anxious, or unsure about getting involved
 
 Elaborations:
+
 - People are confused or unsure about getting involved
 - Still closeted
 - Worried about limited energy/time
@@ -99,7 +101,7 @@ Elaborations:
 
 # What would help you to get involved, participate, or volunteer with AUREA?
 
-```{r help, echo=FALSE}
+```{r help, echo=FALSE, warning=FALSE}
 #Clean strings
 mydata_cleaned <- mydata_cleaned %>% mutate(help=str_replace_all(help, "[()]", ""))
 
@@ -137,7 +139,7 @@ People would like clearer descriptions, more opportunities, and more information
 
 # At the moment, AUREA can offer the following benefits for volunteers. Which of these do you find motivating?
 
-```{r benefits, echo=FALSE}
+```{r benefits, echo=FALSE, warning=FALSE}
 #Clean strings
 mydata_cleaned <- mydata_cleaned %>% mutate(benefits=str_replace_all(benefits, "[()]", ""))
 
@@ -176,11 +178,13 @@ apply((benefits_analyze[-1]), 2, table)
 ```
 
 Most favored benefits:
+
 - Contact with fellow aros
 - Flexible work environment
 - Gaining professional connections and experience
 
 Elaborations on what AUREA can do to help:
+
 - Clearer instructions/expectations/descriptions and sharing more info on experience of volunteering
 - More accessible
 - Make it better know that AUREA is recruiting volunteers (some didn’t know that it was even possible) 
