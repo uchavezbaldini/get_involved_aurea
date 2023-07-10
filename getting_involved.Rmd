@@ -1,0 +1,220 @@
+---
+title: "Get Involved- AUREA"
+author: "UnYoung"
+date: '2021-08-27'
+output: word_document
+---
+
+```{r setup, include=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(readxl)
+
+mydata <- read_excel("Getting_Involved_with_AUREA.xlsx")
+
+View(mydata)
+```
+
+# Getting Involved Form
+
+In order to increase volunteer participation and involvement with AUREA, the Volunteer Management Team conducted a survey to gather information on experiences of aro-spec folks who may potentially want to get involved or are already involved. The findings will be used to signal strengths and problem areas and advise what actions the Volunteer Management Team has to take in order to best serve current volunteers as well as improve recruitment. 
+
+## Summary
+
+```{r prep, echo=FALSE, warning=FALSE}
+library(summarytools)
+library(tidyverse)
+library(stringr)
+
+#Rename some labels
+mydata_cleaned <- mydata %>% 
+  rename(barriers = "What are some potential barriers to getting involved and volunteering with AUREA?",
+         help = "What would help you to get involved, participate, or volunteer with AUREA?",
+         benefits = "At the moment, AUREA can offer the following benefits for volunteers. Which of these do you find motivating?")
+
+mydata_cleaned <- mydata_cleaned %>% 
+  mutate(ID = row_number()) %>%
+  relocate("ID")
+
+```
+
+# What are potential barriers to getting involved?
+
+```{r barriers, echo=FALSE, warning=FALSE}
+#Clean strings
+mydata_cleaned <- mydata_cleaned %>% mutate(barriers=str_replace_all(barriers, "[()]", ""))
+
+mydata_cleaned <- mydata_cleaned %>% mutate(barriers=str_replace_all
+                    (barriers, c("Concerns about suitability e.g., perceived lack of skills" = "Concerns about suitability", 
+                                 "Don't know where to get involved e.g., who to contact" = "Don't know where to get involved", 
+                                 "Don't know how to get involved e.g., what opportunities are available" = "Don't know how to get involved",
+                                 "Health conditions e.g., physical, mental" = "Health conditions",
+                                 "Volunteer descriptions are unclear e.g., unsure what you have to do" = "Unclear volunteer descriptions",
+                                 "Opportunities are inaccessible e.g., access needs, language" = "Inaccessible opportunities",
+                                 "Feeling nervous, anxious, or uncertain about participating" = "Feeling nervous about participating")))
+
+#Split the answers into individual elements
+split_answers_barriers <- strsplit(mydata_cleaned$barriers, ", ")
+
+#Flatten the split answers into a single vector
+flattened_answers_barriers <- unlist(split_answers_barriers)
+
+#Count the frequency of each option
+option_counts_barriers <- table(flattened_answers_barriers)
+
+#Sort the options by frequency in descending order
+sorted_options_barriers <- sort(option_counts_barriers, decreasing = TRUE)
+
+#Shorten labels
+barriers_options_short <- c("Time",
+                      "Suitability",
+                      "Unsure where",
+                      "Unsure how",
+                      "Health",
+                      "Energy",
+                      "Nervous",
+                      "Unclear descriptions",
+                      "Inaccessible",
+                      "Unwelcome",
+                      "Not out")
+
+#Create a horizontal bar chart
+par(mar = c(8, 10, 2, 2))
+par(mgp = c(8, 0, -0.4))
+barplot(sorted_options_barriers, horiz = TRUE, main = "Barriers to Getting Involved", names= barriers_options_short,
+        xlab = "Frequency", ylab = "Options", col = rainbow(11), las=1)
+
+dev.off()
+
+#Print table
+print(sorted_options_barriers)
+```
+
+Most common barriers are:
+
+- Concerns about suitability (e.g., perceived lack of skills)
+- Time constraints
+- Not knowing where/how to get involved
+- Feeling nervous, anxious, or unsure about getting involved
+
+Elaborations:
+
+- People are confused or unsure about getting involved
+- Still closeted
+- Worried about limited energy/time
+
+
+# What would help you to get involved, participate, or volunteer with AUREA?
+
+```{r help, echo=FALSE, warning=FALSE}
+#Clean strings
+mydata_cleaned <- mydata_cleaned %>% mutate(help=str_replace_all(help, "[()]", ""))
+
+mydata_cleaned <- mydata_cleaned %>% mutate(help=str_replace_all
+                    (help, c("The opportunity to get involved or volunteer in ways not already offered" = "Volunteer in ways not offered", 
+                                 "Live Q&A opportunities for interested individuals to get more information" = "Live Q&A")))
+
+#Split the answers into individual elements
+split_answers_help <- strsplit(mydata_cleaned$help, ", ")
+
+#Flatten the split answers into a single vector
+flattened_answers_help <- unlist(split_answers_help)
+
+#Count the frequency of each option
+option_counts_help <- table(flattened_answers_help)
+
+#Sort the options by frequency in descending order
+sorted_options_help <- sort(option_counts_help, decreasing = TRUE)
+
+#Shorten labels
+help_options_short <- c("Clearer descriptions",
+                      "Other volunteer options",
+                      "Better accessibility",
+                      "Live Q&A",
+                      "Testimonials",
+                      "Flexibility")
+
+# Create a horizontal bar chart
+par(mar = c(8, 10, 2, 2))
+par(mgp = c(8, 0, -0.4))
+barplot(sorted_options_help, horiz = TRUE, main = "Facilitators to Getting Involved", names= help_options_short,
+        xlab = "Frequency", ylab = "Options", col = rainbow(6), las=1)
+
+#Print table
+print(sorted_options_help)
+```
+
+People would like clearer descriptions, more opportunities, and more information (Q&A/testimonials).
+
+# At the moment, AUREA can offer the following benefits for volunteers. Which of these do you find motivating?
+
+```{r benefits, echo=FALSE, warning=FALSE}
+#Clean strings
+mydata_cleaned <- mydata_cleaned %>% mutate(benefits=str_replace_all(benefits, "[()]", ""))
+
+mydata_cleaned <- mydata_cleaned %>% mutate(benefits=str_replace_all
+                    (benefits, c("Meet and interact with fellow aromantics through teamwork and socials" = "Meet and interact", 
+                                 "Work in a flexible environment, define your own roles and work schedule, and share your unique ideas" = "Flexible environment",
+                                "Gain potential professional connections through the aromantic community, including references" = "Gain potential professional connections",
+                                "Obtain volunteer/community service hours for school or university"= "Obtain volunteer hours",
+                                "Gain valuable experience to promote on your resume" = "Gain valuable experience")))
+
+#Split multiselect options
+benefits_options <- c("Meet and interact",
+                      "Flexible environment",
+                      "Gain potential professional connections",
+                      "Obtain volunteer hours",
+                      "Gain valuable experience",
+                      "Enhance your skills")
+
+#Split the answers into individual elements
+split_answers_benefits <- strsplit(mydata_cleaned$benefits, ", ")
+
+#Flatten the split answers into a single vector
+flattened_answers_benefits <- unlist(split_answers_benefits)
+
+#Count the frequency of each option
+option_counts_benefits <- table(flattened_answers_benefits)
+
+#Sort the options by frequency in descending order
+sorted_options_benefits <- sort(option_counts_benefits, decreasing = TRUE)
+
+#Shorten labels
+benefits_options_short <- c("Contact",
+                      "Flexibility",
+                      "Professional connections",
+                      "Volunteer hours",
+                      "Gain experience",
+                      "Enhance skills")
+
+# Create a horizontal bar chart
+par(mar = c(8, 10, 2, 2))
+par(mgp = c(8, 0, -0.4))
+barplot(sorted_options_benefits, horiz = TRUE, main = "Benefits to Getting Involved", names= benefits_options_short,
+        xlab = "Frequency", ylab = "Options", col = rainbow(6), las=1)
+
+#Print table
+print(sorted_options_help)
+```
+
+Most favored benefits:
+
+- Contact with fellow aros
+- Flexible work environment
+- Gaining professional connections and experience
+
+Elaborations on what AUREA can do to help:
+
+- Clearer instructions/expectations/descriptions and sharing more info on experience of volunteering
+- More accessible
+- Make it better know that AUREA is recruiting volunteers (some didn’t know that it was even possible) 
+
+## Actions
+- Get testimonies from current volunteers to give an idea of what it's liked to volunteer with us
+- Add the time commitments onto the volunteer description page
+- Make it clear that is all online and that people can do things anonymously
+- Find a way to graphically present the volunteer experience (video or draw my life or infographic/comic)
+- More actively campaign with our volunteer positions (arocalypse/activism discord + our usual social media platforms) 
+- Host a live Q&A session on youtube: people send in their questions ahead of time for us to answer and then allow people in the chat to ask questions - put a poll; getting input from current volunteers
+- Add list of available accommodations to make it more accessible 
+
